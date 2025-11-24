@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>리액트 CDN으로 시작하기</title>
+</head>
+
+<body>
+    <!-- 2. 루트 태그 -->
+    <div id="root"></div>
+
+    <!-- 1. CDN으로 라이브러리 불러오기 -->
+    <!-- 리액트 라이브러리 -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <!-- 리액트DOM 라이브러리 -->
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <!-- 바벨 라이브러리 -->
+    <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.28.4/babel.min.js"></script>
+
+
+    <!-- 3. React 코드 작성 영역 -->
+    <script type="text/babel">
+        // 함수형 컴포넌트 정의
+        function App() {
+            // JSX를 반환 => 화면에 랜더링될 내용
+            return <h1>Hello, React CDN!</h1>; // JS+XML
+        }
+
+        // APP(); -> JS 함수 호출
+        // <App /> -> 리액트 호출
+        // ReactDOM을 통해 App 컴포넌트를 root에 렌더링
+        // ReactDOM.createRoot();
+        // 객체.render();
+
+        // ReactDOM 객체의 crateRoot 메서드를 사용하여
+        // 'root'라는 id를 가진 DOM 요소에 
+        // React 컴포넌트를 렌더링 > render 메서드를 통해 인자를 루트에 전달
+        // ReactDOM.createRoot(document.getElementById('root')); 
+        // root.render(<App />);
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+
+        root.render(<App />);
+        // root.render(<h1>Hello, React CDN!</h1>)
+    </script>
+</body>
+
+</html>
