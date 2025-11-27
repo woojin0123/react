@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>리액트 리스트랜더링</title>
+    <!-- 리액트CDN -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <!-- 바벨: JSX문법을 JS로 변환 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.28.4/babel.min.js"></script>
+</head>
+
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        function App() {
+            return (
+                <>
+                    <FruitList />
+                    <FruitList2 />
+                    <User />
+                    <User2 />
+                </>
+            );
+        }
+        // 배열을 JSX로 랜더링
+        const fruits = ['🍎 Apple', '🍌 Banana', '🍇 Grape'];
+
+        function FruitList() {
+            return (
+                <ul>
+                    {/* 배열.map(함수) */}
+                    {/* 배열.map((요소, 인덱스, 배열 )=>{}) */}
+                    {fruits.map((fruit, index) => (
+                        // 키는 유일한 값으로 지정함
+                        <li key={index}>{fruit}</li>
+                    ))}
+                </ul>
+            );
+        }
+
+        function User() {
+            const users = [
+                { id: 'u1', name: 'Alice' },
+                { id: 'u2', name: 'Bob' },
+            ];
+
+            return (
+                <ul>
+                    {users.map(user => (
+                        // 키는 항목마다 고유해야함
+                        // 인덱스는 임시로만 사용하기
+                        <li key={user.id}>{user.name}</li>
+                    ))}
+                </ul>
+            );
+        }
+
+        // 자식 컴포넌트
+        // Fruit 컴포넌트는 하나의 과일 이름을 <li> 태그로 렌더링합니다.
+        function Fruit({ name }) {
+            return <li>{name}</li>; // JSX 안에서는 변수 출력 시 중괄호 {} 사용
+        }
+
+        // 부모 컴포넌트
+        // FruitList 컴포넌트는 과일 리스트 전체를 렌더링합니다.
+        function FruitList2() {
+            const fruits = ['🍓 Strawberry', '🥝 Kiwi', '🍍 Pineapple'];
+
+            return (
+                <ul>
+                    {fruits.map((fruit, i) => (
+                        <Fruit key={i} name={fruit} />
+                    ))}
+                </ul>
+            );
+        }
+
+        // map() + 삼항연산자
+        function User2() {
+            const items = [
+                // 아이템 리스트 없으면 No items found 나옴
+                { id: 'u1', name: 'Alice' },
+                { id: 'u2', name: 'Bob' },
+            ];
+
+            return (
+                <ul>
+                    {items.length > 0 ? (
+                        items.map(item => <li key={item.id}>{item.name}</li>)
+                    ) : (
+                        <p>No items found.</p>
+                    )}
+                </ul>
+            );
+        }
+        const root = ReactDOM.createRoot(document.querySelector('#root'));
+        root.render(<App />);
+    </script>
+</body>
+
+</html>

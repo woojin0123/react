@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>리액트 JSX</title>
+    <title>리액트 조건부 랜더링</title>
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.28.4/babel.min.js"></script>
@@ -15,15 +15,80 @@
 
     <script type="text/babel">
 
-        // {조건부 렌더링} + props
-        function Greeting(props) {
+        // {조건부 렌더링}
+
+        // 부모 컴포넌트
+        function App() {
+            const isLoggedIn = false;
+            // if (isLoggedIn) {
+            //     return <h1>환영합니다!</h1>;
+            // } else {
+            //     return <h1>로그인해주세요.</h1>;
+            // }
             return (
-                <h1>{props.isLoggedIn ? '환영합니다!' : '로그인해주세요.'}</h1>
+                <>
+                    {/* 조건부 렌더링 */}
+                    <p>{isLoggedIn ? '환영합니다!' : '로그인해주세요.'}</p>
+                    <Greeting2 isLoggedIn={true} />
+                    <Greeting3 isLoggedIn={true} />
+                    <AlertBox hasAlert={true} />
+                    <Greeting4 isLoggedIn={false} />
+                    <WarningBanner show={true} />
+                </>
             );
         }
 
+        // 자식 컴포넌트
+        // 1. 조건 ? A : B (삼항 연산자)
+        function Greeting2(props) {
+            const isLoggedIn = false;
+            // 조건부 렌더링
+            return (
+                <p>{props.isLoggedIn ? '환영합니다!' : '로그인해주세요.'}</p>
+            );
+        }
+
+        // 3. if문 밖에서 조건문 찾기
+        function Greeting3(props) {
+            const isLoggedIn = props.isLoggedIn;
+            
+            if (isLoggedIn) {
+                return <h1>환영합니다!</h1>;
+            } else {
+                return <h1>로그인해주세요.</h1>;
+            }
+        }
+        // 2. 조건 && 요소
+        // 조건이 true일 때만 렌더링
+        function AlertBox(props) {
+            return (
+                <div>
+                    <h1>공지사항</h1>
+                    {props.hasAlert && <p>⚠️ 알림이 있습니다!</p>}
+                </div>
+            );
+        }
+
+        // 조건 결과를 변수에 저장 후 JSX에서 삽입 (가독성이 좋음)
+        function Greeting4(props) {
+            let message;
+            if (props.isLoggedIn) {
+                message = <h1>환영합니다!</h1>;
+            } else {
+                message = <h1>로그인해주세요.</h1>;
+            }
+
+            return <div>{message}</div>;
+        }
+
+        // return을 통한 렌더링 제어
+        // 조건이 false일 경우, null을 리턴하여 컴포넌트를 렌더링 자체하지 않음.
+        function WarningBanner({ show }) {
+            if (!show) return null; // 아무것도 출력하지 않음
+            return <div className="warning">경고!</div>;
+        }
         const root = ReactDOM.createRoot(document.querySelector('#root'));
-        root.render(<App7 />);
+        root.render(<App />);
     </script>
 </body>
 
