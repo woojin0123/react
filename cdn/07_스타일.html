@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>JSX 스타일</title>
+    <style>
+        .title {
+            background-color: lightblue;
+            font-size: 24px;
+        }
+
+        .box {
+            background: pink;
+            padding: 20px;
+            border: 1px solid indigo;
+        }
+        .error {
+            color: red;
+        }
+        .success {
+            color: green;
+        }
+        .alert {
+            background: orange;
+        }
+    </style>
+    <link rel="stylesheet" href="App.css">
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const styleObj = {
+            color: 'blue',
+            // 카멜케이스
+            backgroundColor: 'lightgray',
+
+            // 케밥케이스
+            // 'background-color' : 'lightpink',
+            fontSize: '20px',
+            padding: '10px',
+        };
+
+        /* 
+        인라인 스타일(Inline Style)
+            형식: 
+        */
+        const isError = false;
+        function InlineStyle() {
+            return (
+                <>
+                    {/* JSX 내부에서는 JS문 사용 불가 */}
+                    <p style={{ color: isError ? 'red' : 'green' }}>
+                        {isError ? '오류 발생' : '정상'}
+                    </p>
+                    <div style={styleObj}>스타일이 적용된 박스</div>
+                    {/* return <div style={{fontSize: 130}}>스타일이 적용된 박스</div>; */}
+                    {/* 단위를 생략하면 px, 단위 포함 작성 시 문자열로 표기 */}
+                </>
+            );
+        }
+
+        // 내부 스타일(InternalStyle)
+        // - CDN: <style>{속성}</style>
+        // - CDN, CRA, Vite: <style>{`속성`}</style>
+
+        // 외부 스타일(ExternalStyle)
+        // - CDN: <link rel="stylesheet" href="App.css">
+        // - CRA, Vite: import "./App.css"
+
+        // 컴포넌트 이름은 파스칼 표기법: 단어별 첫 단어부터 첫글자들 대문자
+        function InternalStyle() {
+            return (
+                <>
+                    <style>
+                        {`
+                            .internal {
+                                font-style: italic;
+                                text-shadow: 0 0 5px #333;
+                                border-radius: 50px;
+                            }
+                            
+                        `}
+                    </style>
+                    <h1 className="box internal">Hello, React!</h1>
+                </>
+            );
+        }
+
+        // <link rel="stylesheet" href="App.css">
+        function ExternalStyle() {
+            return (
+                <>
+                    <h1 className="title">Hello, React!</h1>
+                </>
+            );
+        }
+
+        // 조건부(삼항연산자) 스타일 적용 
+        function Alert({ type }) {
+            const className = type === 'error' ? 'alert error' : 'alert success';
+
+            return <div className={className}>알림 메시지 - 내부 스타일</div>;
+        }
+
+        // 루트 컴포넌트
+        function App() {
+            return (
+                <>
+                    <h1>JSX 스타일 적용하기</h1>
+                    <InlineStyle />
+                    <InternalStyle />
+                    <ExternalStyle />
+                    <Alert type="" />
+                    <Alert type="error" />
+                </>
+            );
+        }
+        // 출력
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+
+
+    </script>
+</body>
+
+</html>
