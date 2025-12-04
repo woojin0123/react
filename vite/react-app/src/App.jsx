@@ -10,7 +10,7 @@ function Header(props) {
         <a
           href="/"
           onClick={(e) => {
-            e.preventDefault(); /* 기본 이벤트(헤더 클릭 시 링크로 넘어가기) */
+            e.preventDefault(); /* 기본 이벤트(헤더 클릭 시 링크로 넘어가기) 제거 */
             alert("경고창이 뜬다.");
             props.onChangeMode();
           }}
@@ -64,7 +64,8 @@ function Create(props) {
   return (
     <article>
       <h2>Create</h2>
-        <form onSubmit={e=>{
+      <form
+        onSubmit={(e) => {
           e.preventDefault();
           console.log(e.target.title);
           // e.target: <form>
@@ -73,15 +74,51 @@ function Create(props) {
           const title = e.target.title.value;
           const body = e.target.body.value;
           props.onCreate(title, body);
-        }}>
-          <p><input type="text" name="title" placeholder="title" /></p>
-          <p><textarea name="body" placeholder="body"></textarea></p>
-          <p><input type="submit" value="Create" /></p>
-        </form>
+        }}
+      >
+        <p>
+          <input type="text" name="title" placeholder="title" />
+        </p>
+        <p>
+          <textarea name="body" placeholder="body"></textarea>
+        </p>
+        <p>
+          <input type="submit" value="Create" />
+        </p>
+      </form>
     </article>
   );
 }
 
+function Update(props) {
+  return (
+    <article>
+      <h2>Update</h2>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          console.log(e.target.title);
+          // e.target: <form>
+          // e.target.title: name='title'
+          // e.target.body: name='body'
+          const title = e.target.title.value;
+          const body = e.target.body.value;
+          props.onCreate(title, body);
+        }}
+      >
+        <p>
+          <input type="text" name="title" placeholder="title" />
+        </p>
+        <p>
+          <textarea name="body" placeholder="body"></textarea>
+        </p>
+        <p>
+          <input type="submit" value="Update" />
+        </p>
+      </form>
+    </article>
+  );
+}
 // App 컴포넌트는 useState()로 지정한 변수 값이 변경되면 다시 실행
 function App() {
   // const [변수, set변수] = useState('초기값');
@@ -93,20 +130,22 @@ function App() {
   // const mode = _mode[0];
   // const setmode = _mode[1];
   // console.log('_mode', _mode); /* ['WELCOME], f] */
-const [topics, setTopics] = useState([
+  const [topics, setTopics] = useState([
     { id: 1, title: "html", body: "html is ..." }, // topics[0]
     { id: 2, title: "css", body: "css is ..." }, // topics[1]
     { id: 3, title: "javascript", body: "javascript is ..." }, // topics[2]
   ]);
 
-// const topics = useState[
-//     { id: 1, title: "html", body: "html is ..." }, // topics[0]
-//     { id: 2, title: "css", body: "css is ..." }, // topics[1]
-//     { id: 3, title: "javascript", body: "javascript is ..." }, // topics[2]
-//     { id: 4, title: "jQuery", body: "jjQuery is ..." }, // topics[3]
-//   ];
+  // const topics = useState[
+  //     { id: 1, title: "html", body: "html is ..." }, // topics[0]
+  //     { id: 2, title: "css", body: "css is ..." }, // topics[1]
+  //     { id: 3, title: "javascript", body: "javascript is ..." }, // topics[2]
+  //     { id: 4, title: "jQuery", body: "jjQuery is ..." }, // topics[3]
+  //   ];
 
   let content = null;
+  let contentControl = null;
+
   // CRUD(Create Read Update Delete)
   if (mode === "WELCOME") {
     content = <Article title="Welcome" body="Hello, Web"></Article>;
@@ -120,17 +159,36 @@ const [topics, setTopics] = useState([
       }
     }
     content = <Article title={title} body={body}></Article>;
+
+    contentControl = (
+      <li>
+        {/* 갱신(update) 버튼 */}
+        <a href={"/update/" + id} onClick={e=>{
+          e.preventDefault();
+          setMode("UPDATE");
+        }}>Update</a>
+      </li>
+    );
+    console.log('contentControl', contentControl);
   } else if (mode === "CREATE") {
-    content = <Create onCreate={(title, body)=>{
-      const newTopic = {id:nextId, title:title, body:body};
-      const newTopics = [...topics];
-      newTopics.push(newTopic);
-      setTopics(newTopics);
-      setMode('READ');
-      setId(nextId);
-      setNextid(nextId+1);
-    }}></Create>;
-  }
+    content = (
+      <Create
+        onCreate={(title, body) => {
+          const newTopic = { id: nextId, title: title, body: body };
+          const newTopics = [...topics];
+          newTopics.push(newTopic);
+          setTopics(newTopics);
+          setMode("READ");
+          setId(nextId);
+          setNextid(nextId + 1);
+        }}
+      ></Create>
+    );
+
+    // UPDATE = READ + CREATE
+  } else if (mode === 'UPDATE') 
+    content = <Update onUpdate={(title, body) => }></Update>
+   // if end
 
   return (
     <div>
@@ -154,18 +212,23 @@ const [topics, setTopics] = useState([
       ></Nav>
       {/* 아티클 */}
       {content}
-      {/* 생성(Create), 추가(insert)버튼 */}
-      <a
-        href="/create"
-        onClick={(e) => {
-          e.preventDefault();
-          setMode("CREATE");
-        }}
-      >
-        Create
-      </a>
+      <ul>
+        <li>
+          {/* 생성(Create), 추가(insert)버튼 */}
+          <a
+            href="/create"
+            onClick={(e) => {
+              e.preventDefault();
+              setMode("CREATE");
+            }}
+          >
+            Create
+          </a>
+        </li>
+        {/* 갱신(update) 버튼 */}
+        {contentControl}
+      </ul>
     </div>
   );
-}
 
 export default App;
